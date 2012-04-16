@@ -4,13 +4,14 @@ FCOPTS=-O3 -fopenmp -mtune=native -march=native
 #FCOPTS=-fast -openmp -parallel
 
 COMMON_OBJ=matrixtools.o workingprecision.o
+EXES=project_qr_house project_cg project_cg_single
 
-all: project_qr_house project_cg project_cg_single
+all: $(EXES)
 
 clean:
 	rm -f *.mod
 	rm -f *.o
-	rm -f project_qr project_cg project_cg_single
+	rm -f $(EXES)
 
 test_qr.o: test_qr.f90 $(COMMON_OBJ) qr.o
 	$(FC) $(FCOPTS) -c test_qr.f90
