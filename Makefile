@@ -5,7 +5,7 @@ FCOPTS=-O3 -fopenmp -mtune=native -march=native
 
 COMMON_OBJ=matrixtools.o workingprecision.o
 
-all: project_qr project_cg project_cg_single
+all: project_qr_house project_cg project_cg_single
 
 clean:
 	rm -f *.mod
@@ -21,8 +21,14 @@ test_qr: test_qr.o $(COMMON_OBJ) qr.o
 project_qr.o: project_qr.f90 $(COMMON_OBJ) qr.o
 	$(FC) $(FCOPTS) -c project_qr.f90
 
+project_qr_house.o: project_qr_house.f90 $(COMMON_OBJ) qr.o
+	$(FC) $(FCOPTS) -c project_qr_house.f90
+
 project_qr: project_qr.o $(COMMON_OBJ) qr.o
 	$(FC) $(FCOPTS) -o project_qr project_qr.o $(COMMON_OBJ) qr.o
+
+project_qr_house: project_qr_house.o $(COMMON_OBJ) qr.o
+	$(FC) $(FCOPTS) -o project_qr_house project_qr_house.o $(COMMON_OBJ) qr.o
 
 project_cg.o: project_cg.f90 $(COMMON_OBJ) cg.o
 	$(FC) $(FCOPTS) -c project_cg.f90
