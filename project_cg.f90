@@ -19,21 +19,18 @@ program project
     call MPI_INIT(ierr)
     call MPI_COMM_RANK(MPI_COMM_WORLD, id, ierr)
 
-    if (id == 0) then
-        call getarg(1,buffer)
-        if (buffer(1:2) == "-h") then
-            print *, "./project [alpha]"
-            stop
-        elseif (trim(buffer) == '') then
-            print *, "Need alpha..."
-            print *, "./project [alpha]"
-            stop
-        end if
-        read(buffer,*) alpha
-        ! deg => rad
-        alpha = pi/180_wp*alpha
-        call MPI_BCAST(alpha, 1, MPI_INTEGER, 0, MPI_COMM_WORLD, ierr)
+    call getarg(1,buffer)
+    if (buffer(1:2) == "-h") then
+        print *, "./project [alpha]"
+        stop
+    elseif (trim(buffer) == '') then
+        print *, "Need alpha..."
+        print *, "./project [alpha]"
+        stop
     end if
+    read(buffer,*) alpha
+    ! deg => rad
+    alpha = pi/180_wp*alpha
 
     call build_panel(alpha, Nseg, N, xx, x, y, ds, xmid, ymid, A, rhs)
 
@@ -44,7 +41,7 @@ program project
     call solve_cg(A, rhs, gam)
     !gam = congrad(A, rhs)
 
-    !if (id == 0) then
+    if (id == 0) then
 
         !$OMP parallel do
         do i = 2, N-1
@@ -76,9 +73,9 @@ program project
         cd = cy*sin(alpha) + cx*cos(alpha)
 
         print *, "#", cl, cd, cm
-    !end if
+    end if
 
-    !call MPI_FINALIZE(ierr)
+    call MPI_FINALIZE(ierr)
 contains
     subroutine build_panel(alpha, Nseg, N, xx, x, y, ds, xmid, ymid, A, rhs)
         real(kind=wp), intent(in) :: alpha, xx
