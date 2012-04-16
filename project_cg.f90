@@ -1,7 +1,7 @@
 program project
     use workingprecision
     use matrixtools
-    !use mpi
+    use mpi
     use cg
     implicit none
     real(kind=wp), parameter :: pi = 3.14159265358979323846264338327950288_wp

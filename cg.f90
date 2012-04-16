@@ -39,13 +39,13 @@ contains
         ! Solve a linear system using QR decomposition
         real(kind=wp) :: A(:,:), b(:), x(size(b))
         real(kind=wp) :: AT(size(A,1),size(A,2))
-        integer :: dest, i, j, k, ierr, my_rank, p, n
-        real(kind=wp), allocatable, dimension(:) :: buf, me, temp2
+        integer :: dest, i, k, ierr, my_rank, p, n
+        real(kind=wp), allocatable, dimension(:) :: buf, temp2
         real(kind=wp), allocatable, dimension(:) :: ans, ans2, x1, p1, q, r
         real(kind=wp), allocatable, dimension(:,:) :: tempA, tempAT
         real(kind=wp) :: alpha, rho, rho0
         real(kind=wp), parameter :: tol = 0.001_wp
-        integer :: count_rows, rows, row_index, sender, status(MPI_STATUS_SIZE)
+        integer :: rows, row_index, status(MPI_STATUS_SIZE)
 
         call MPI_COMM_SIZE(MPI_COMM_WORLD, p, ierr)
         call MPI_COMM_RANK(MPI_COMM_WORLD, my_rank, ierr)
