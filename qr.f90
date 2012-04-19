@@ -2,6 +2,8 @@ module qr
     use workingprecision
     use matrixtools
     implicit none
+    ! This module contains the QR related functions and subroutines for both
+    ! Gives and Householder methods.
 contains
     ! {{{ Householder QR subroutines
     ! Given in input vector, compute the Householder vector.
@@ -48,15 +50,12 @@ contains
         b = 0_wp
 
         do i = 1, n
-            ! Dynamic memory is the devil, but meh.
-            !allocate(v(m-i+1), v_outer(m-i+1,m-i+1))
             call house(W(i:m,i), v(1:m-i+1), b(i))
             call outer_product(v(1:m-i+1), v(1:m-i+1), v_outer(1:m-i+1,1:m-i+1))
             W(i:m,i:n) = W(i:m,i:n) - b(i)*matmul(v_outer(1:m-i+1,1:m-i+1), W(i:m,i:n))
             if (i < m) then
                 W(i+1:m,i) = v(2:m-i+1)
             end if
-            !deallocate(v, v_outer)
         end do
 
         ! We only want the upper triangular parts of W.
@@ -64,12 +63,10 @@ contains
 
         call eye(m, Q)
         do i = n, 1, -1
-            !allocate(v(m-i+1), v_outer(m-i+1,m-i+1))
             v(1) = 1_wp
             v(2:m-i+1) = W(i+1:m,i)
             call outer_product(v(1:m-i+1), v(1:m-i+1), v_outer(1:m-i+1,1:m-i+1))
             Q(i:m,i:m) = Q(i:m,i:m) - b(i)*matmul(v_outer(1:m-i+1,1:m-i+1), Q(i:m,i:m))
-            !deallocate(v, v_outer)
         end do
     end subroutine house_qr
     ! }}}
@@ -129,7 +126,7 @@ contains
 
         do while(updated)
             updated = .false.
-            !$OMP parallel do private(c,s)
+            !$OMP parallel do private(j,c,s)
             do i = n, 2, -1
                 do j = 1, i-1
                     if (i-2*j==n-1-T) then
@@ -145,11 +142,6 @@ contains
             T = T + 1
         end do
         Q = transpose(Q)
-
-        !print *, "A:"
-        !call print_matrix(A)
-        !print *, "Q*R:"
-        !call print_matrix(matmul(Q,R))
     end subroutine givens_qr
     ! }}}
     ! {{{ Linear system drivers

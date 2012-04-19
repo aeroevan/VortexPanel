@@ -1,6 +1,7 @@
 module matrixtools
     use workingprecision
     implicit none
+    ! This module contains some common routines to both CG and QR methods.
 contains
 
     subroutine print_matrix(A)
